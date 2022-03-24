@@ -1,3 +1,9 @@
+from pip._internal.operations import freeze
+
+x = freeze.freeze()
+for p in x:
+    print(p)
+
 import pulsar
 from pyspark.sql import SparkSession
 from influxdb import InfluxDBClient
