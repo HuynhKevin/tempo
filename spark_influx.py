@@ -42,9 +42,8 @@ class Consumer:
     def __init__(self) -> None:
         self.spark = SparkSession \
         .builder \
+        .master("local[*]") \
         .getOrCreate()
-        #.master("local[*]") \
-        #.getOrCreate()
 
     def collect_data(self, PULSAR_BROKER_ENDPOINT, PULSAR_ADMIN_ENDPOINT, PULSAR_TOPIC):
         while True:
