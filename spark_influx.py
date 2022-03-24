@@ -29,7 +29,7 @@ import re
 def write(row):
     print("Row type ", type(row))
 
-    client = InfluxDBClient(host='localhost', port=8086)
+    client = InfluxDBClient(host='host.docker.internal', port=8086)
     influx_data = []
     print("Row value: ", row.value)
     contents = row.value.split(",")
