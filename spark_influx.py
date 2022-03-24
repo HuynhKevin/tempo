@@ -69,7 +69,8 @@ class Consumer:
             stream_df.writeStream.foreach(write).start().awaitTermination()
 
 PULSAR_BROKER_ENDPOINT = "pulsar://127.0.0.1:6650"
-PULSAR_ADMIN_ENDPOINT = "http://127.0.0.1:80"
+#PULSAR_ADMIN_ENDPOINT = "http://127.0.0.1:80"
+PULSAR_ADMIN_ENDPOINT = "pulsar-proxy.addons-dev-pulsar.svc.cluster.local:80"
 
 # With TLS
 # PULSAR_BROKER_ENDPOINT = "pulsar+ssl://127.0.0.1:6651"
