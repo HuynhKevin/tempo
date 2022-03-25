@@ -37,8 +37,10 @@ class Consumer:
 #PULSAR_ADMIN_ENDPOINT = "https://stream.dev.client.graal.systems:443"
 
 # Without TLS
-PULSAR_BROKER_ENDPOINT = "pulsar://host.docker.internal:6650"
-PULSAR_ADMIN_ENDPOINT = "http://host.docker.internal:80"
+# PULSAR_BROKER_ENDPOINT = "pulsar://host.docker.internal:6650"
+# PULSAR_ADMIN_ENDPOINT = "http://host.docker.internal:80"
+PULSAR_BROKER_ENDPOINT = "pulsar://pulsar-broker.addons-dev-pulsar.svc.cluster.local:6650"
+PULSAR_ADMIN_ENDPOINT = "http://pulsar-broker.addons-dev-pulsar.svc.cluster.local:8080"
 
 TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXVzZXIifQ.eEiPXcZ7TDOn6eEmjWgnmYzOnjCJZyv3K2hNniz2KXt6S-ucnGdNcbKF-OahVJipbxwkQB7Msxq23XOMVr8uZkWaJLudY2GUsc7RfCsCCeTA7smE_fQRpxIQsto6hcEg0qst0n4-2jEbfLC-PHLpSRLARPpbmRkVbYCXgH4hqhj9LgTHtr1CpjTyYGXitfjmJKvxSamyfFZiaULqYLU6Bm4MWj7pNl6kgYwmbvz4xknrLDOV0lAgBlvAIJEEuTDz1nLIsKqj2VwHCMbbahtIRzeShdEVK_9PO7uSmiUWLHaIkdWq8jVgw5KcRLC4QzWPidbbjIQUQ-Mi2nl_TBv3Zg"
 PULSAR_TOPIC = "apache/pulsar/test-topic"
