@@ -12,12 +12,12 @@ import re
 def write(row):
     print("Row type ", type(row))
 
-    client = InfluxDBClient(host='influxdb.default.svc.cluster.local', port=8086)
+    client = InfluxDBClient(host='influxdb.addons-dev-influxdb.svc.cluster.local', port=8086)
     influx_data = []
     print("Row value: ", row.value)
     contents = row.value.split(",")
     #re.escape(row["value"])
-    influx_data.append("test_table2,content1=" + contents[0] + ",content2=" + contents[1].split("\n")[0] + " id=2 5")
+    influx_data.append("test_table,content1=" + contents[0] + ",content2=" + contents[1].split("\n")[0] + " id=2 5")
     #influx_data.append("m1,location=location3,fruit=fruit2,id=id x=10,y=1,z=42i 1562458785618")
     client.write_points(influx_data, database="test", time_precision='ms', batch_size=10000, protocol='line')
 
