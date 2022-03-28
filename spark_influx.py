@@ -9,27 +9,10 @@ from pyspark.sql import SparkSession
 from influxdb import InfluxDBClient
 import re
 
-# class InfluxDBWriter:
-#     def __init__(self):
-#         self.client = InfluxDBClient(host='localhost', port=8086)
-
-#     def open(self, partition_id, epoch_id):
-#         print("Opened %d, %d" % (partition_id, epoch_id))
-#         return True
-
-#     def process(self, row):
-#         influx_data = []            
-#         influx_data.append("test_table, content={content}, id=5").format(content=row["value"])
-#         self.client.write_points(influx_data, database="test", time_precision='ms', batch_size=10000, protocol='line')
-
-#     def close(self, error):
-#         self.client.__del__()
-#         print("Closed with error: %s" % str(error))
-
 def write(row):
     print("Row type ", type(row))
 
-    client = InfluxDBClient(host='host.docker.internal', port=8086)
+    client = InfluxDBClient(host='influxdb.default.svc.cluster.local', port=8086)
     influx_data = []
     print("Row value: ", row.value)
     contents = row.value.split(",")
@@ -55,21 +38,11 @@ class Consumer:
                     .option("topic", PULSAR_TOPIC) \
                     .load() \
                     .selectExpr("CAST(value AS STRING)")
-                    # .option("pulsar.client.authPluginClassName","org.apache.pulsar.client.impl.auth.AuthenticationToken") \
-                    # .option("pulsar.client.authParams","token:" + TOKEN) \
-                    # .option("pulsar.client.tlsTrustCertsFilePath","certs/ca.cert.pem") \
-                    # .option("pulsar.client.tlsAllowInsecureConnection","false") \
-                    # .option("pulsar.client.tlsHostnameVerificationenable","false") \
-                    # .option("topic", PULSAR_TOPIC) \
-                    # .load() \
-                    # .selectExpr("CAST(value AS STRING)")
 
-            #stream_df.writeStream.foreach(InfluxDBWriter()).start().awaitTermination()
             stream_df.writeStream.foreach(write).start().awaitTermination()
 
-PULSAR_BROKER_ENDPOINT = "pulsar://host.docker.internal:6650"
-#PULSAR_ADMIN_ENDPOINT = "http://127.0.0.1:80"
-PULSAR_ADMIN_ENDPOINT = "http://host.docker.internal:80"
+PULSAR_BROKER_ENDPOINT = "pulsar://pulsar-broker.addons-dev-pulsar.svc.cluster.local:6650"
+PULSAR_ADMIN_ENDPOINT = "http://pulsar-broker.addons-dev-pulsar.svc.cluster.local:8080"
 
 # With TLS
 # PULSAR_BROKER_ENDPOINT = "pulsar+ssl://127.0.0.1:6651"
