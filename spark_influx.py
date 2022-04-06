@@ -7,19 +7,37 @@ for p in x:
 import pulsar
 from pyspark.sql import SparkSession
 from influxdb import InfluxDBClient
-import re
+from datetime import datetime
 
 def write(row):
     print("Row type ", type(row))
 
     client = InfluxDBClient(host='influxdb.addons-dev-influxdb.svc.cluster.local', port=8086)
-    influx_data = []
     print("Row value: ", row.value)
     contents = row.value.split(",")
-    #re.escape(row["value"])
-    influx_data.append("test_table,content1=" + contents[0] + ",content2=" + contents[1].split("\n")[0] + " id=2 5")
-    #influx_data.append("m1,location=location3,fruit=fruit2,id=id x=10,y=1,z=42i 1562458785618")
-    client.write_points(influx_data, database="test", time_precision='ms', batch_size=10000, protocol='line')
+    if contents[0] == "date":
+        return
+    date_time = datetime.strptime(contents[0], '%Y-%m-%d %H:%M:%S')
+    json_body = [
+            {
+                "measurement": "test_table2",
+                "tags": {
+                    "station_meteo": 14578001,
+                },
+                "time": date_time.isoformat('T'),
+                "fields": {
+                    "dd": contents[1],
+                    "hu": contents[2],
+                    "precip": contents[3],
+                    "hu": contents[4],
+                    "td": contents[5],
+                    "t": contents[6],
+                    "psl": contents[7].split("\n")[0]
+                }
+            }
+        ]
+
+    client.write_points(json_body, database="test")
 
 class Consumer:
     def __init__(self) -> None:
@@ -43,10 +61,6 @@ class Consumer:
 
 PULSAR_BROKER_ENDPOINT = "pulsar://pulsar-broker.addons-dev-pulsar.svc.cluster.local:6650"
 PULSAR_ADMIN_ENDPOINT = "http://pulsar-broker.addons-dev-pulsar.svc.cluster.local:8080"
-
-# With TLS
-# PULSAR_BROKER_ENDPOINT = "pulsar+ssl://127.0.0.1:6651"
-# PULSAR_ADMIN_ENDPOINT = "https://127.0.0.1:443"
 
 TOKEN="eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0LXVzZXIifQ.eEiPXcZ7TDOn6eEmjWgnmYzOnjCJZyv3K2hNniz2KXt6S-ucnGdNcbKF-OahVJipbxwkQB7Msxq23XOMVr8uZkWaJLudY2GUsc7RfCsCCeTA7smE_fQRpxIQsto6hcEg0qst0n4-2jEbfLC-PHLpSRLARPpbmRkVbYCXgH4hqhj9LgTHtr1CpjTyYGXitfjmJKvxSamyfFZiaULqYLU6Bm4MWj7pNl6kgYwmbvz4xknrLDOV0lAgBlvAIJEEuTDz1nLIsKqj2VwHCMbbahtIRzeShdEVK_9PO7uSmiUWLHaIkdWq8jVgw5KcRLC4QzWPidbbjIQUQ-Mi2nl_TBv3Zg"
 PULSAR_TOPIC = "apache/pulsar/test-topic"
